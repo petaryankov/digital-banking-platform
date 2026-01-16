@@ -8,7 +8,7 @@ public interface UserService {
 
     User createUser(User user);
 
-    Optional<User> getUserByEmail(String email);
+    User getUserByEmail(String email);
 
-    Optional<User> getUserById(Long id);
+    User getUserById(Long id);
 }

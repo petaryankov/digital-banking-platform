@@ -1,5 +1,7 @@
 package com.yankov.backend.service.impl;
 
+import com.yankov.backend.exception.InsufficientBalanceException;
+import com.yankov.backend.exception.InvalidTransactionException;
 import com.yankov.backend.model.Account;
 import com.yankov.backend.model.User;
 import com.yankov.backend.repository.AccountRepository;
@@ -41,6 +43,10 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     @Override
     public Account deposit(Account account, BigDecimal amount) {
+
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new InvalidTransactionException();
+        }
         account.setBalance(account.getBalance().add(amount));
 
         return accountRepository.save(account);
@@ -49,6 +55,18 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     @Override
     public Account withdraw(Account account, BigDecimal amount) {
+
+        // Prevent invalid withdrawal amounts (zero or negative)
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new InvalidTransactionException();
+        }
+
+        // Prevent withdrawing more money than the account currently holds
+        if (account.getBalance().compareTo(amount) < 0) {
+            throw new InsufficientBalanceException(
+                    account.getId(), amount
+            );
+        }
 
         account.setBalance(account.getBalance().subtract(amount));
 
