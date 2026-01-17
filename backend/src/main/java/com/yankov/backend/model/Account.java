@@ -1,5 +1,6 @@
 package com.yankov.backend.model;
 
+import com.yankov.backend.enums.Currency;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,9 @@ public class Account {
 
     @Column(precision = 15, scale = 2)
     private BigDecimal balance;
+
+    @Enumerated(EnumType.STRING)
+    private Currency currency;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -2,6 +2,7 @@ package com.yankov.backend.service.impl;
 
 import com.yankov.backend.enums.TransactionStatus;
 import com.yankov.backend.enums.TransactionType;
+import com.yankov.backend.exception.CurrencyMismatchException;
 import com.yankov.backend.model.Account;
 import com.yankov.backend.model.Transaction;
 import com.yankov.backend.repository.TransactionRepository;
@@ -67,6 +68,14 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     @Override
     public Transaction transfer(Account source, Account target, BigDecimal amount) {
+
+        // Validate same currency
+        if (!source.getCurrency().equals(target.getCurrency())) {
+            throw new CurrencyMismatchException(
+                    source.getCurrency().name(),
+                    target.getCurrency().name()
+            );
+        }
 
         // Atomic operation: if either fails, whole transaction is rolled back
         accountService.withdraw(source, amount); // remove from source

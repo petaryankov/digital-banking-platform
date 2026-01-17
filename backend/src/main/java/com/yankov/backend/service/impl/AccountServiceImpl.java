@@ -25,6 +25,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account createAccount(Account account) {
 
+        account.setBalance(BigDecimal.ZERO); // always start at zero
+
         return accountRepository.save(account);
     }
 

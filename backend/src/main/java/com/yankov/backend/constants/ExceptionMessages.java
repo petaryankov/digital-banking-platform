@@ -29,5 +29,6 @@ public class ExceptionMessages {
     public static final String INVALID_TRANSACTION_AMOUNT =
             "Transaction amount must be greater than zero";
 
+    public static final String CURRENCY_MISMATCH = "Currency mismatch: source=%s, target=%s";
 
 }

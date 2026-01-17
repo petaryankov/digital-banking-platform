@@ -29,7 +29,7 @@ public class User {
     String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     Role role;
 
     @CreationTimestamp
