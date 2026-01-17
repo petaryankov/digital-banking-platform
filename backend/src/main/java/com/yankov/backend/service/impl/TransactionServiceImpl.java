@@ -30,7 +30,7 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionRepository.save(transaction);
     }
 
-    // Deposit money
+    // Deposit money into target account
     @Transactional
     @Override
     public Transaction deposit(Account target, BigDecimal amount) {
@@ -47,7 +47,7 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionRepository.save(transaction);
     }
 
-    // Withdraw money
+    // Withdraw money from source account
     @Transactional
     @Override
     public Transaction withdraw(Account source, BigDecimal amount) {
@@ -63,11 +63,12 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionRepository.save(transaction);
     }
 
-    // Transfer money
+    // Transfer money between two accounts
     @Transactional
     @Override
     public Transaction transfer(Account source, Account target, BigDecimal amount) {
 
+        // Atomic operation: if either fails, whole transaction is rolled back
         accountService.withdraw(source, amount); // remove from source
         accountService.deposit(target, amount); // add to target
 

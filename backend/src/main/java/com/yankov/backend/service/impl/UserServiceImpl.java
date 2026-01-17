@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    // Get the user by email
     @Transactional(readOnly = true)
     @Override
     public User getUserByEmail(String email) {
@@ -35,6 +36,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException(email));
     }
 
+    // Get the user by id
     @Transactional(readOnly = true)
     @Override
     public User getUserById(Long id) {
