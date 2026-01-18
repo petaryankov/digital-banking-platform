@@ -9,4 +9,10 @@ public class AccountNotFoundException extends RuntimeException {
                 ExceptionMessages.ACCOUNT_NOT_FOUND_BY_ID, id
         ));
     }
+
+    public AccountNotFoundException(String accountNumber) {
+        super(String.format(
+                ExceptionMessages.ACCOUNT_NOT_FOUND_BY_ACCOUNT_NUMBER, accountNumber
+        ));
+    }
 }

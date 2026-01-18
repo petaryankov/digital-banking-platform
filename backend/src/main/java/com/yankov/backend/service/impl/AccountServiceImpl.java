@@ -1,18 +1,21 @@
 package com.yankov.backend.service.impl;
 
+import com.yankov.backend.enums.Currency;
+import com.yankov.backend.exception.AccountNotFoundException;
 import com.yankov.backend.exception.InsufficientBalanceException;
 import com.yankov.backend.exception.InvalidTransactionException;
 import com.yankov.backend.model.Account;
 import com.yankov.backend.model.User;
 import com.yankov.backend.repository.AccountRepository;
 import com.yankov.backend.service.AccountService;
+import com.yankov.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,34 +23,56 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
 
+    private final UserService userService;
+
     // Create account
     @Transactional
     @Override
-    public Account createAccount(Account account) {
+    public Account createAccount(Long userId, Currency currency) {
 
-        account.setBalance(BigDecimal.ZERO); // always start at zero
+        Account account = Account.builder()
+                .user(userService.getUserById(userId))
+                .currency(currency)
+                .balance(BigDecimal.ZERO) // always start at zero
+                .accountNumber(generateAccountNumber())
+                .build();
 
         return accountRepository.save(account);
+    }
+
+    // Helper method to generate unique account number
+    private String generateAccountNumber() {
+
+        return "ACC" + UUID.randomUUID()
+                .toString()
+                .replaceAll("-", "")
+                .substring(0, 8)
+                .toUpperCase();
     }
 
     // Get account by the account number
     @Transactional(readOnly = true)
     @Override
-    public Optional<Account> getAccountByNumber(String number) {
-        return accountRepository.findByAccountNumber(number);
+    public Account getAccountByAccountNumber(String number) {
+
+        return accountRepository
+                .findByAccountNumber(number)
+                .orElseThrow(() -> new AccountNotFoundException(number));
     }
 
-    // Get account by the user
+    // Get accounts by the user
     @Transactional(readOnly = true)
     @Override
-    public List<Account> getAccountByUser(User user) {
+    public List<Account> getAccountsByUserId(Long userId) {
+
+        User user = userService.getUserById(userId);
 
         return accountRepository.findByUser(user);
     }
 
     @Transactional
     @Override
-    public Account deposit(Account account, BigDecimal amount) {
+    public void deposit(Account account, BigDecimal amount) {
 
         // Prevent invalid deposit amount 0 or negative
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
@@ -55,12 +80,12 @@ public class AccountServiceImpl implements AccountService {
         }
         account.setBalance(account.getBalance().add(amount));
 
-        return accountRepository.save(account);
+        accountRepository.save(account);
     }
 
     @Transactional
     @Override
-    public Account withdraw(Account account, BigDecimal amount) {
+    public void withdraw(Account account, BigDecimal amount) {
 
         // Prevent invalid withdrawal amounts 0 or negative
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
@@ -76,6 +101,6 @@ public class AccountServiceImpl implements AccountService {
 
         account.setBalance(account.getBalance().subtract(amount));
 
-        return accountRepository.save(account);
+        accountRepository.save(account);
     }
 }

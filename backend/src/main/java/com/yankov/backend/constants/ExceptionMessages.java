@@ -22,6 +22,9 @@ public class ExceptionMessages {
     public static final String ACCOUNT_NOT_FOUND_BY_ID =
             "Account not found with id %d";
 
+    public static final String ACCOUNT_NOT_FOUND_BY_ACCOUNT_NUMBER =
+            "Account not found with account number %s";
+
     public static final String INSUFFICIENT_BALANCE =
             "Account %d has insufficient balance for amount %s";
 

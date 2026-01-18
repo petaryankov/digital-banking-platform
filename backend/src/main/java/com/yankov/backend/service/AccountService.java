@@ -1,21 +1,20 @@
 package com.yankov.backend.service;
 
+import com.yankov.backend.enums.Currency;
 import com.yankov.backend.model.Account;
-import com.yankov.backend.model.User;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 public interface AccountService {
 
-    Account createAccount(Account account);
+    Account createAccount(Long userId, Currency currency);
 
-    Optional<Account> getAccountByNumber(String number);
+    Account getAccountByAccountNumber(String number);
 
-    List<Account> getAccountByUser(User user);
+    List<Account> getAccountsByUserId(Long userId);
 
-    Account deposit(Account account, BigDecimal amount);
+    void deposit(Account account, BigDecimal amount);
 
-    Account withdraw(Account account, BigDecimal amount);
+    void withdraw(Account account, BigDecimal amount);
 }
