@@ -25,6 +25,8 @@ public class AccountServiceImpl implements AccountService {
 
     private final UserService userService;
 
+    private final BigDecimal AMOUNT_ZERO = BigDecimal.ZERO;
+
     // Create account
     @Transactional
     @Override
@@ -33,7 +35,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = Account.builder()
                 .user(userService.getUserById(userId))
                 .currency(currency)
-                .balance(BigDecimal.ZERO) // always start at zero
+                .balance(AMOUNT_ZERO) // always start at zero
                 .accountNumber(generateAccountNumber())
                 .build();
 
@@ -75,8 +77,8 @@ public class AccountServiceImpl implements AccountService {
     public void deposit(Account account, BigDecimal amount) {
 
         // Prevent invalid deposit amount 0 or negative
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new InvalidTransactionException();
+        if (amount.compareTo(AMOUNT_ZERO) <= 0) {
+            throw new InvalidTransactionException(AMOUNT_ZERO);
         }
         account.setBalance(account.getBalance().add(amount));
 
@@ -88,8 +90,8 @@ public class AccountServiceImpl implements AccountService {
     public void withdraw(Account account, BigDecimal amount) {
 
         // Prevent invalid withdrawal amounts 0 or negative
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new InvalidTransactionException();
+        if (amount.compareTo(AMOUNT_ZERO) <= 0) {
+            throw new InvalidTransactionException(AMOUNT_ZERO);
         }
 
         // Prevent withdrawing more money than the account holds
