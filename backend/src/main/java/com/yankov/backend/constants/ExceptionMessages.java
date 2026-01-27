@@ -6,7 +6,7 @@ public class ExceptionMessages {
     // prevent instantiation
     private ExceptionMessages() {}
 
-    // ===== USER =====
+    // USER
 
     // Not found by ID
     public static final String USER_NOT_FOUND_BY_ID = "User not found with id %d";
@@ -17,7 +17,7 @@ public class ExceptionMessages {
     // Already exists with this email
     public static final String USER_ALREADY_EXISTS = "User already exists with email %s";
 
-    // ===== ACCOUNT =====
+    // ACCOUNT
 
     public static final String ACCOUNT_NOT_FOUND_BY_ID =
             "Account not found with id %d";
@@ -28,7 +28,7 @@ public class ExceptionMessages {
     public static final String INSUFFICIENT_BALANCE =
             "Account %d has insufficient balance for amount %s";
 
-    // ===== TRANSACTION =====
+    // TRANSACTION
     public static final String INVALID_TRANSACTION_AMOUNT =
             "Transaction amount @d must be greater than zero";
 
