@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.yankov.backend.constants.ExceptionMessages.USER_NOT_FOUND_BY_EMAIL;
+import static com.yankov.backend.constants.SecurityConstants.ROLE_PREFIX;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +37,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getEmail(),
                 user.getPassword(),
                 List.of(new SimpleGrantedAuthority(
-                        SecurityConstants.ROLE_PREFIX + user.getRole()))
+                        ROLE_PREFIX + user.getRole()))
         );
     }
 }

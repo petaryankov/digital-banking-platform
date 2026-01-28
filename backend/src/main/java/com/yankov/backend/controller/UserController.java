@@ -8,7 +8,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import static com.yankov.backend.constants.SecurityConstants.USER_OR_ADMIN;
+import static com.yankov.backend.constants.SecurityConstants.USER_PROFILE_DATA;
 
 @RestController
 @RequestMapping("/api/users")
@@ -55,6 +59,12 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(toResponse(savedUser));
+    }
+
+    @PreAuthorize(USER_OR_ADMIN)
+    @GetMapping("/profile")
+    public String userProfile() {
+        return USER_PROFILE_DATA;
     }
 
     // private mapper
