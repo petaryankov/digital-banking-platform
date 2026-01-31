@@ -19,7 +19,7 @@ public class ExceptionMessages {
 
     // TRANSACTION
     public static final String INVALID_TRANSACTION_AMOUNT =
-            "Transaction amount %d must be greater than zero";
+            "Transaction amount %s must be greater than zero";
     public static final String CURRENCY_MISMATCH = "Currency mismatch: source=%s, target=%s";
 
     // JWT
@@ -33,5 +33,7 @@ public class ExceptionMessages {
             "JWT token has expired";
     public static final String MALFORMED_TOKEN =
             "Malformed or unsupported JWT token";
+    public static final String ACCESS_DENIED = "Access Denied";
+    public static final String UNEXPECTED_SERVER_ERROR = "Unexpected server error";
 
 }

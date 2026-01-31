@@ -3,12 +3,16 @@ package com.yankov.backend.exception.handler;
 import com.yankov.backend.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.yankov.backend.constants.ExceptionMessages.ACCESS_DENIED;
+import static com.yankov.backend.constants.ExceptionMessages.UNEXPECTED_SERVER_ERROR;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -29,14 +33,14 @@ public class GlobalExceptionHandler {
     // User exceptions
 
     @ExceptionHandler(UserNotFoundException.class)
-    public  ResponseEntity<Map<String, Object>> handleUserNotFound(
+    public ResponseEntity<Map<String, Object>> handleUserNotFound(
             UserNotFoundException ex
     ) {
         return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
-    public  ResponseEntity<Map<String, Object>> handleUserAlreadyExists(
+    public ResponseEntity<Map<String, Object>> handleUserAlreadyExists(
             UserAlreadyExistsException ex
     ) {
         return buildResponseEntity(HttpStatus.CONFLICT, ex.getMessage());
@@ -74,14 +78,45 @@ public class GlobalExceptionHandler {
         return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    // JWT / Security
+
+    @ExceptionHandler(InvalidJwtTokenException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidJwtToken(
+            InvalidJwtTokenException ex
+    ) {
+        return buildResponseEntity(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidRefreshToken(
+            InvalidRefreshTokenException ex
+    ) {
+        return buildResponseEntity(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
+    @ExceptionHandler(RefreshTokenNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleRefreshTokenNotFound(
+            RefreshTokenNotFoundException ex
+    )  {
+        return buildResponseEntity(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(
+            AccessDeniedException ex
+    )  {
+        return buildResponseEntity(HttpStatus.FORBIDDEN, ACCESS_DENIED);
+    }
+
     // Fallback
 
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeException(
             RuntimeException ex
     ) {
         return buildResponseEntity(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                ex.getMessage()
+                UNEXPECTED_SERVER_ERROR
         );
     }
 
