@@ -2,11 +2,13 @@ package com.yankov.backend.model.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
+@Builder
 public class TransactionRequestDto {
 
     @NotNull(message = "Account number is required")

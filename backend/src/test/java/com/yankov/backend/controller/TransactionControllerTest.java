@@ -92,9 +92,10 @@ class TransactionControllerTest {
     void deposit_shouldReturnTransaction() throws Exception {
 
         // Arrange
-        TransactionRequestDto request = new TransactionRequestDto();
-        request.setAccountNumber(TARGET_ACCOUNT_NUMBER);
-        request.setAmount(AMOUNT_100);
+        TransactionRequestDto request = TransactionRequestDto.builder()
+                .accountNumber(TARGET_ACCOUNT_NUMBER)
+                .amount(AMOUNT_100)
+                .build();
 
         Transaction transaction = Transaction.builder()
                 .id(ACCOUNT_ID)
@@ -127,9 +128,10 @@ class TransactionControllerTest {
     void withdraw_shouldReturnTransaction() throws Exception {
 
         // Arrange
-        TransactionRequestDto request = new TransactionRequestDto();
-        request.setAccountNumber(SOURCE_ACCOUNT_NUMBER);
-        request.setAmount(AMOUNT_50);
+        TransactionRequestDto request = TransactionRequestDto.builder()
+                .accountNumber(SOURCE_ACCOUNT_NUMBER)
+                .amount(AMOUNT_50)
+                .build();
 
         Transaction transaction = Transaction.builder()
                 .id(ACCOUNT_ID)
@@ -162,10 +164,11 @@ class TransactionControllerTest {
     void transfer_shouldReturnTransaction() throws Exception {
 
         // Arrange
-        TransferRequestDto request = new TransferRequestDto();
-        request.setSourceAccountNumber(SOURCE_ACCOUNT_NUMBER);
-        request.setTargetAccountNumber(TARGET_ACCOUNT_NUMBER);
-        request.setAmount(AMOUNT_50);
+        TransferRequestDto request = TransferRequestDto.builder()
+                .sourceAccountNumber(SOURCE_ACCOUNT_NUMBER)
+                .targetAccountNumber(TARGET_ACCOUNT_NUMBER)
+                .amount(AMOUNT_50)
+                .build();
 
         Transaction transaction = Transaction.builder()
                 .id(ACCOUNT_ID)

@@ -7,27 +7,34 @@ import java.math.BigDecimal;
 
 public final class TestRequestFactory {
 
-    private TestRequestFactory() {}
+    private TestRequestFactory() {
+    }
+
+    private static final String ACCOUNT_NUMBER = "ACC123456";
+    private static final String TARGET_ACCOUNT_NUMBER = "ACC654321";
 
     public static TransactionRequestDto depositRequest() {
-        TransactionRequestDto dto = new TransactionRequestDto();
-        dto.setAccountNumber("ACC123456");
-        dto.setAmount(BigDecimal.TEN);
-        return dto;
+
+        return TransactionRequestDto.builder()
+                .accountNumber(ACCOUNT_NUMBER)
+                .amount(BigDecimal.TEN)
+                .build();
     }
 
     public static TransactionRequestDto withdrawRequest() {
-        TransactionRequestDto dto = new TransactionRequestDto();
-        dto.setAccountNumber("ACC123456");
-        dto.setAmount(BigDecimal.TEN);
-        return dto;
+
+        return TransactionRequestDto.builder()
+                .accountNumber(ACCOUNT_NUMBER)
+                .amount(BigDecimal.TEN)
+                .build();
     }
 
     public static TransferRequestDto transferRequest() {
-        TransferRequestDto dto = new TransferRequestDto();
-        dto.setSourceAccountNumber("ACC123456");
-        dto.setTargetAccountNumber("ACC654321");
-        dto.setAmount(BigDecimal.TEN);
-        return dto;
+
+        return TransferRequestDto.builder()
+                .sourceAccountNumber(ACCOUNT_NUMBER)
+                .targetAccountNumber(TARGET_ACCOUNT_NUMBER)
+                .build();
+
     }
 }
