@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.time.Instant;
 import java.util.Date;
+import java.util.UUID;
 
 import static com.yankov.backend.constants.ExceptionMessages.*;
 import static com.yankov.backend.constants.JwtConstants.*;
@@ -102,12 +103,16 @@ public class JwtService {
     private String buildToken(String email,
                               String tokenType,
                               long expiration) {
+
+        Instant now = Instant.now();
+
         return Jwts.builder()
+                .setId(UUID.randomUUID().toString())
                 .setSubject(email)
                 .setIssuer(JWT_ISSUER)
                 .claim(TOKEN_TYPE_CLAIM, tokenType)
-                .setIssuedAt(Date.from(Instant.now()))
-                .setExpiration(Date.from(Instant.now().plusMillis(expiration)))
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plusMillis(expiration)))
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }
