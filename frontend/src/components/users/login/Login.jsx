@@ -1,7 +1,49 @@
-import { Link} from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useActionState, useState } from "react";
+import authApi from "../../../api/authApi";
+import { tokenService } from "../../../services/tokenService";
+import ErrorMessage from "../../error-message/ErrorMessage";
 
 
 export default function Login() {
+
+  // ui state
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  // reset error on submit
+  const handleSubmit = () => {
+    setError(null);
+  }
+
+  // submit login
+  const loginHandler = async (_, formData) => {
+    
+    const { email, password } = Object.fromEntries(formData);
+
+    try {
+      
+      const res = await authApi.login(email, password);
+
+      // save tokens
+      tokenService.setTokens(
+        res.data.accessToken,
+        res.data.refreshToken
+      );
+
+      navigate("/dashboard");
+
+    } catch (err) {
+      // error extraction
+      if (err.response?.status === 401) {
+        setError("Invalid email or password!!!");
+      } else {
+        setError("Something went wrong! Try again later");
+      }
+    }
+  };
+
+  const [_, loginAction, isPending] = useActionState(loginHandler);
 
   return (
     <>
@@ -11,7 +53,7 @@ export default function Login() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form id="login" className="space-y-6">
+          <form id="login" action={loginAction} onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-100">
                 Email address
@@ -22,6 +64,7 @@ export default function Login() {
                   name="email"
                   type="email"
                   required
+                  disabled={isPending}
                   autoComplete="email"
                   className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
                 />
@@ -45,18 +88,29 @@ export default function Login() {
                   name="password"
                   type="password"
                   required
+                  disabled={isPending}
                   autoComplete="current-password"
                   className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
                 />
               </div>
             </div>
 
+            {error && <ErrorMessage error={error} />}
+
             <div>
               <button
                 type="submit"
+                value= "Login"
+                disabled={isPending}
                 className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               >
-                Login
+                {isPending
+                  ? (
+                    <>
+                      Signing in...
+                    </>
+                  )
+                  : ("Login")}
               </button>
             </div>
           </form>
