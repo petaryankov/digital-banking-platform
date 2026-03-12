@@ -1,13 +1,23 @@
 import { useNavigate } from "react-router";
 import { tokenService } from "../../services/tokenService";
+import { useEffect } from "react";
 
 export default function Dashboard() {
 
   const navigate = useNavigate();
 
+  // check authentication on component mount
+  useEffect(() => {
+    if (!tokenService.getAccessToken()) {
+      navigate("/login", { replace: true });
+    }
+  }, [navigate]);
+
   const handleLogout = () => {
-    tokenService.clear();
-    navigate("/login");
+    // clear tokens on logout
+    tokenService.clearTokens();
+    // redirect to home page after logout
+    navigate("/", { replace: true });
   };
 
   return (
