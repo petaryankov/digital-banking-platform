@@ -1,20 +1,28 @@
 import { Link, useNavigate } from "react-router";
-import { useActionState, useState } from "react";
-import authApi from "../../../api/authApi";
+import { useActionState, useContext, useState } from "react";
+import {jwtDecode} from "jwt-decode";
+
 import { tokenService } from "../../../services/tokenService";
+import { AuthContext } from "../../../contexts/AuthContext";
 import ErrorMessage from "../../error-message/ErrorMessage";
+import authApi from "../../../api/authApi";
 
 
 export default function Login() {
 
   // ui state
   const [error, setError] = useState(null);
+
+  // route navigation
   const navigate = useNavigate();
 
   // reset error on submit
   const handleSubmit = () => {
     setError(null);
   }
+
+  // access login handler from context
+  const { userLoginHandler } = useContext(AuthContext);
 
   // submit login
   const loginHandler = async (_, formData) => {
@@ -23,6 +31,7 @@ export default function Login() {
 
     try {
       
+      // call login api
       const res = await authApi.login(email, password);
 
       // save tokens
@@ -31,6 +40,17 @@ export default function Login() {
         res.data.refreshToken
       );
 
+      // decode token for user data to extract user info
+      const decodedToken = jwtDecode(res.data.accessToken);
+      
+      // update auth context with user data
+      userLoginHandler({
+        email: decodedToken.sub,
+        accessToken: res.data.accessToken,
+        refreshToken: res.data.refreshToken
+      });
+
+      // redirect to dashboard
       navigate("/dashboard");
 
     } catch (err) {
@@ -43,6 +63,7 @@ export default function Login() {
     }
   };
 
+  // manage login action state
   const [_, loginAction, isPending] = useActionState(loginHandler);
 
   return (
