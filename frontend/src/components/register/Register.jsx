@@ -1,6 +1,56 @@
-import { Link } from "react-router";
+import { useActionState, useState } from "react";
+import { Link, useNavigate } from "react-router";
+import authApi from "../../api/authApi";
+import ErrorMessage from "../error-message/ErrorMessage";
 
 export default function Register() {
+
+  // route navigation
+  const navigate = useNavigate();
+
+  // ui error state
+  const [error, setError] = useState(null);
+
+  // reset error before submit
+  const handleSubmit = () => {
+    setError(null);
+  };
+
+  // register form handler
+  const registerHandler = async (_, formData) => {
+
+    // extract form data
+    const { fullName, email, password, confirmPassword } = Object.fromEntries(formData);
+
+    // client-side password match validation
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+
+      // call register api
+      await authApi.register({ fullName, email, password });
+
+      // redirect to login page after successful registration
+      navigate("/login");
+
+    } catch (error) {
+
+      // error extraction
+      if (error.response?.status === 409) {
+        setError("User with this email already exists!!!");
+      } else {
+        setError("Something went wrong. Please try again later.");
+      }
+
+    }
+
+  };
+
+  // manage register action state
+  const [_, registerAction, isPending] = useActionState(registerHandler);
 
   return (
     <>
@@ -13,10 +63,10 @@ export default function Register() {
           </h2>
         </div>
 
-        {/* Form */}
+        {/* Register Form */}
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
 
-          <form id="register" className="space-y-6">
+          <form id="register" action={registerAction} onSubmit={handleSubmit} className="space-y-6">
 
             {/* Full Name */}
             <div>
@@ -32,6 +82,7 @@ export default function Register() {
                   name="fullName"
                   type="text"
                   required
+                  disabled={isPending}
                   className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white 
                   outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 
                   focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
@@ -53,6 +104,7 @@ export default function Register() {
                   name="email"
                   type="email"
                   required
+                  disabled={isPending}
                   autoComplete="email"
                   className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white 
                   outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 
@@ -75,6 +127,7 @@ export default function Register() {
                   name="password"
                   type="password"
                   required
+                  disabled={isPending}
                   autoComplete="new-password"
                   className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white 
                   outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 
@@ -97,6 +150,7 @@ export default function Register() {
                   name="confirmPassword"
                   type="password"
                   required
+                  disabled={isPending}
                   autoComplete="new-password"
                   className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white 
                   outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 
@@ -105,15 +159,19 @@ export default function Register() {
               </div>
             </div>
 
+            {/* Display error message */}
+            {error && <ErrorMessage error={error} />}
+
             {/* Submit */}
             <div>
               <button
                 type="submit"
+                disabled={isPending}
                 className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 
                 text-sm/6 font-semibold text-white hover:bg-indigo-400 
                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               >
-                Create Account
+                {isPending ? "Creating Account..." : "Create Account"}
               </button>
             </div>
 
