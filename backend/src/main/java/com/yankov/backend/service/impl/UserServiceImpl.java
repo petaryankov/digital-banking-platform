@@ -54,4 +54,19 @@ public class UserServiceImpl implements UserService {
     public boolean existsByEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
+
+    // deactivate User
+    @Override
+    public void deactivateUser(String email) {
+
+        // find User
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
+
+        // set active to false
+        user.setActive(false);
+
+        // save user
+        userRepository.save(user);
+    }
 }

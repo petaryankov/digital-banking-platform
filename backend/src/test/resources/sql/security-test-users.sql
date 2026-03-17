@@ -5,7 +5,8 @@ INSERT INTO users (
     full_name,
     password,
     role,
-    created_at
+    created_at,
+    active
 )
 VALUES
     (
@@ -14,7 +15,8 @@ VALUES
         'User Test',
         '$2a$10$Dow1lF3FZP1Qb3z5J5qLxO7m7xvYyJ8OqFZk9z5H3yMZzZcJZy1G6', -- "password"
         'USER',
-        NOW()
+        NOW(),
+        true
     ),
     (
         2,
@@ -22,5 +24,6 @@ VALUES
         'Admin Test',
         '$2a$10$Dow1lF3FZP1Qb3z5J5qLxO7m7xvYyJ8OqFZk9z5H3yMZzZcJZy1G6', -- "password"
         'ADMIN',
-        NOW()
+        NOW(),
+        true
     );
