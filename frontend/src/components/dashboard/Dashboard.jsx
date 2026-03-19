@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router";
+import { useContext, useEffect } from "react";
+import userApi from "../../api/userApi";
 import { tokenService } from "../../services/tokenService";
-import { useEffect } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function Dashboard() {
 
@@ -12,6 +14,41 @@ export default function Dashboard() {
       navigate("/login", { replace: true });
     }
   }, [navigate]);
+
+  const auth = useContext(AuthContext); 
+
+  const handleDeleteAccount = async () => {
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete your account? This action cannot be undone."
+    );
+
+    if (!confirmDelete) {
+      return
+    };
+
+    try {
+
+      // call backend API to delete user
+      await userApi.deleteUser();
+
+      // remove tokens from storage
+      tokenService.clearTokens();
+
+      // update context
+      auth.userLogoutHandler();
+
+      // redirect to home page after account deletion
+      navigate("/", { replace: true });
+
+    } catch (err) {
+
+      console.error("Error deleting account:", err);
+      alert("Failed to delete account. Please try again.");
+    }
+  };
+
+
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -41,6 +78,13 @@ export default function Dashboard() {
 
         </div>
       </main>
+
+      <button
+        onClick={handleDeleteAccount}
+        className="fixed bottom-6 right-6 bg-red-600 hover:bg-red-500 text-white font-medium px-1.5 py-1.5 text-sm rounded-md shadow-md transition"
+      >
+        Delete Account
+      </button>
 
     </div>
   );
