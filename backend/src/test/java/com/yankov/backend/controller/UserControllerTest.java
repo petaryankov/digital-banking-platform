@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.yankov.backend.enums.Role;
 import com.yankov.backend.model.User;
-import com.yankov.backend.security.CustomUserDetailsService;
-import com.yankov.backend.security.JwtService;
+import com.yankov.backend.service.JwtService;
+import com.yankov.backend.service.RefreshTokenService;
 import com.yankov.backend.service.UserService;
 import com.yankov.backend.model.dto.request.UserCreateRequestDto;
 
+import com.yankov.backend.service.impl.CustomUserDetailsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 // Disable security filters until JWT is implemented
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(UserController.class)
+@WebMvcTest(controllers = UserController.class)
 class UserControllerTest {
 
     @Autowired
@@ -42,10 +43,13 @@ class UserControllerTest {
     private UserService userService;
 
     @MockitoBean
-    private JwtService jwtService;
+    private RefreshTokenService refreshTokenService;
 
     @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     // Test constants
     private static final Long USER_ID = 1L;
@@ -64,6 +68,7 @@ class UserControllerTest {
                 .fullName(FULL_NAME)
                 .email(EMAIL)
                 .role(Role.USER)
+                .active(true)
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -88,6 +93,7 @@ class UserControllerTest {
                 .fullName(FULL_NAME)
                 .email(EMAIL)
                 .role(Role.USER)
+                .active(true)
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -118,6 +124,7 @@ class UserControllerTest {
                 .fullName(FULL_NAME)
                 .email(EMAIL)
                 .role(Role.USER)
+                .active(true)
                 .createdAt(LocalDateTime.now())
                 .build();
 

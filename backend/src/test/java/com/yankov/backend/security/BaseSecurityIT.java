@@ -6,6 +6,7 @@ import com.yankov.backend.model.RefreshToken;
 import com.yankov.backend.model.User;
 import com.yankov.backend.repository.RefreshTokenRepository;
 import com.yankov.backend.repository.UserRepository;
+import com.yankov.backend.service.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -51,18 +52,20 @@ public abstract class BaseSecurityIT {
 
     protected static final String USER_EMAIL = "user@test.com";
     protected static final String ADMIN_EMAIL = "admin@test.com";
+    protected static final String USER_ROLE = "USER";
+    protected static final String ADMIN_ROLE = "ADMIN";
 
     // setup tokens before each test
     @BeforeEach
     void setupTokens() {
 
         // generate access tokens
-        userAccessToken = jwtService.generateAccessToken(USER_EMAIL);
-        adminAccessToken = jwtService.generateAccessToken(ADMIN_EMAIL);
+        userAccessToken = jwtService.generateAccessToken(USER_EMAIL,USER_ROLE);
+        adminAccessToken = jwtService.generateAccessToken(ADMIN_EMAIL, ADMIN_ROLE);
 
         // generate refresh tokens
-        userRefreshToken = jwtService.generateRefreshToken(USER_EMAIL);
-        adminRefreshToken = jwtService.generateRefreshToken(ADMIN_EMAIL);
+        userRefreshToken = jwtService.generateRefreshToken(USER_EMAIL,USER_ROLE);
+        adminRefreshToken = jwtService.generateRefreshToken(ADMIN_EMAIL, ADMIN_ROLE);
 
         // create & save refresh token entities
         saveRefreshToken(userRefreshToken, USER_EMAIL);

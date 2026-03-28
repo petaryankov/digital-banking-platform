@@ -2,8 +2,8 @@ package com.yankov.backend.controller;
 
 import com.yankov.backend.constants.ExceptionMessages;
 import com.yankov.backend.exception.*;
-import com.yankov.backend.security.CustomUserDetailsService;
-import com.yankov.backend.security.JwtService;
+import com.yankov.backend.service.JwtService;
+import com.yankov.backend.service.impl.CustomUserDetailsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

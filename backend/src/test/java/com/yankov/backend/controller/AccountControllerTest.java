@@ -6,8 +6,8 @@ import com.yankov.backend.enums.Currency;
 import com.yankov.backend.model.Account;
 import com.yankov.backend.model.User;
 import com.yankov.backend.model.dto.request.AccountCreateRequestDto;
-import com.yankov.backend.security.CustomUserDetailsService;
-import com.yankov.backend.security.JwtService;
+import com.yankov.backend.service.impl.CustomUserDetailsService;
+import com.yankov.backend.service.impl.JwtServiceImpl;
 import com.yankov.backend.service.AccountService;
 
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class AccountControllerTest {
     private ObjectMapper objectMapper;
 
     @MockitoBean
-    private JwtService jwtService;
+    private JwtServiceImpl jwtService;
 
     @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
