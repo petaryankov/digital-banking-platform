@@ -1,6 +1,7 @@
-package com.yankov.backend.security;
+package com.yankov.backend.service.impl;
 
 import com.yankov.backend.exception.InvalidJwtTokenException;
+import com.yankov.backend.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -19,13 +20,13 @@ import static com.yankov.backend.constants.ExceptionMessages.*;
 import static com.yankov.backend.constants.JwtConstants.*;
 
 @Service
-public class JwtService {
+public class JwtServiceImpl implements JwtService {
 
     private final Key signingKey;
     private final long accessTokenExpiration;
     private final long refreshTokenExpiration;
 
-    public JwtService(
+    public JwtServiceImpl(
             @Value("${jwt.secret}") String base64Secret,
             @Value("${jwt.expiration}") long accessTokenExpiration,
             @Value("${jwt.refresh-expiration}") long refreshTokenExpiration) {
@@ -38,14 +39,14 @@ public class JwtService {
     }
 
     // Generate access token
-    public String generateAccessToken(String email) {
+    public String generateAccessToken(String email, String role) {
 
-        return buildToken(email, ACCESS_TOKEN_TYPE, accessTokenExpiration);
+        return buildToken(email, role, ACCESS_TOKEN_TYPE, accessTokenExpiration);
     }
 
     // Generate refresh token
-    public String generateRefreshToken(String email) {
-        return buildToken(email, REFRESH_TOKEN_TYPE, refreshTokenExpiration);
+    public String generateRefreshToken(String email, String role) {
+        return buildToken(email, role, REFRESH_TOKEN_TYPE, refreshTokenExpiration);
     }
 
     // Extract token type
@@ -101,6 +102,7 @@ public class JwtService {
 
     // Internal token builder
     private String buildToken(String email,
+                              String role,
                               String tokenType,
                               long expiration) {
 
@@ -110,6 +112,7 @@ public class JwtService {
                 .setId(UUID.randomUUID().toString())
                 .setSubject(email)
                 .setIssuer(JWT_ISSUER)
+                .claim(TOKEN_ROLE, role)
                 .claim(TOKEN_TYPE_CLAIM, tokenType)
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plusMillis(expiration)))

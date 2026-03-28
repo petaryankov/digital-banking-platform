@@ -1,10 +1,12 @@
-package com.yankov.backend.security;
+package com.yankov.backend.service.impl;
 
 import com.yankov.backend.exception.InvalidRefreshTokenException;
 import com.yankov.backend.exception.RefreshTokenNotFoundException;
 import com.yankov.backend.model.RefreshToken;
 import com.yankov.backend.model.User;
 import com.yankov.backend.repository.RefreshTokenRepository;
+import com.yankov.backend.service.JwtService;
+import com.yankov.backend.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +14,7 @@ import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
-public class RefreshTokenService {
+public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
