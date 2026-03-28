@@ -11,4 +11,5 @@ public class JwtConstants {
 
     // Claims
     public static final String TOKEN_TYPE_CLAIM = "token_type";
+    public static final String TOKEN_ROLE = "role";
 }
