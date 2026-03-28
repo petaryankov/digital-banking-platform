@@ -8,6 +8,7 @@ public class ExceptionMessages {
     public static final String USER_NOT_FOUND_BY_ID = "User not found with id %d";
     public static final String USER_NOT_FOUND_BY_EMAIL = "User with email %s not found";
     public static final String USER_ALREADY_EXISTS = "User already exists with email %s";
+    public static final String USER_IS_DEACTIVATED = "User is deactivated";
 
     // ACCOUNT
     public static final String ACCOUNT_NOT_FOUND_BY_ID =
