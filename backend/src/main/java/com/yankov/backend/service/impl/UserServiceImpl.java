@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -55,11 +57,24 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    // deactivate User
+    // Activate user in db
+    @Override
+    public void activateUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        // set activate to true
+        user.setActive(true);
+
+        // save user
+        userRepository.save(user);
+    }
+
+    // deactivate user in db
     @Override
     public void deactivateUser(String email) {
 
-        // find User
+        // find user
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
 
@@ -68,5 +83,10 @@ public class UserServiceImpl implements UserService {
 
         // save user
         userRepository.save(user);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }
